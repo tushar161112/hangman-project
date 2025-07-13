@@ -1,1 +1,46 @@
 
+import random
+
+words = ["python", "coding", "game", "hangman", "easy"]
+levels = {1: 4, 2: 6, 3: 8}
+
+def play(attempts):
+    word = random.choice(words)
+    hidden = ['-'] * len(word)
+    guessed = set()
+    score = 0
+
+    while attempts > 0 and '-' in hidden:
+        print('\nWord: ' + ' '.join(hidden))
+        print(f"Attempts: {attempts} | Score: {score} | Guessed: {', '.join(guessed)}")
+        guess = input("Guess a letter: ").lower()
+
+        if not guess.isalpha() or len(guess) != 1:
+            print("Enter a single letter!")
+            continue
+        if guess in guessed:
+            print("Already guessed!")
+            continue
+
+        guessed.add(guess)
+        if guess in word:
+            hidden = [c if c in guessed else '-' for c in word]
+            score += 2
+            print("Correct!")
+        else:
+            attempts -= 1
+            score -= 1
+            print("Wrong!")
+
+    print(f"\nWord was: {word}")
+    print("Score:", score)
+    print("You won!" if '-' not in hidden else "You lost!")
+
+def hangman():
+    print("\n*** HANGMAN ***")
+    level = input("Level (1=Hard, 2=Medium, 3=Easy): ")
+    while level not in ['1','2','3']:
+        level = input("Enter 1, 2, or 3: ")
+    play(levels[int(level)])
+
+hangman()
